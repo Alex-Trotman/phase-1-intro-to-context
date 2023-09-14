@@ -73,8 +73,35 @@ function hoursWorkedOnDate(employeeRecord, date){
 
   if (timeInEvent && timeOutEvent) {
     const hoursWorked = timeOutEvent.hour - timeInEvent.hour;
-    return hoursWorked;
+    return hoursWorked / 100;
   } else {
     return 0; 
   }
+}
+
+function wagesEarnedOnDate(employeeRecord, date){
+  const hoursWorked = hoursWorkedOnDate(employeeRecord, date)
+  return (hoursWorked * employeeRecord.payPerHour)
+}
+
+function allWagesFor(employeeRecord){
+  const dates = employeeRecord.timeInEvents.map(eventObj => eventObj.date)
+  
+  let totalPay = 0;
+
+  dates.forEach(date => {
+    const pay = wagesEarnedOnDate(employeeRecord, date)
+    totalPay += pay;
+    
+  });
+  return totalPay;
+}
+
+function calculatePayroll(employeeRecords){
+  let totalPay = 0;
+  employeeRecords.forEach(employeeRecord => {
+    const sum = allWagesFor(employeeRecord)
+    totalPay += sum;
+  })
+  return totalPay
 }
